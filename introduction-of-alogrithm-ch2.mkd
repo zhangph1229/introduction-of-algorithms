@@ -1,0 +1,218 @@
+第二章 算法基础
+---
+### 2.1 插入排序
+**排序问题描述**
+
+输入:n个数的一个序列{a1,a2,..,an} <br>
+输出:输入序列的一个排列{a1',a2',..,an'},满足a1'<= a2'<=..<=an'.
+
+**算法描述**
+```
+INSERTION-SORT(A)
+1 for j = 2 to A.length
+2     key = A[j]
+3     //Insert A[j] into the sorted sequence A[1..j-1]
+4     i = j - 1
+5     while i > 0 and A[i] > key
+6         A[i+1] = A[i]
+7         i = i - 1
+8     A[i+1] = key
+
+```
+**算法实现**
+```java
+public int[] insertionSort(int[] A){
+        for(int j = 1; j < A.length; j++){
+                int key = A[j];
+                int i = j - 1;
+                while(i>0 && A[i] > key){
+                        A[i+1] = A[i];
+                        i--;
+                }
+                A[i+1] = key;
+        }
+        return A;
+}
+```
+
+**练习**
+2.1-1 
+
+2.1-2
+```
+INSERTION-SORT(A)
+1 for j = 2 to A.length
+2     key = A[j]
+3     //Insert A[j] into the sorted sequence A[1..j-1]
+4     i = j - 1
+5     while i > 0 and A[i] < key
+6         A[i+1] = A[i]
+7         i = i - 1
+8     A[i+1] = key
+```
+2.1-3
+```
+//naive search method
+SEARCH(A,v)
+1 for i = 1 to A.length
+2     if A[i] == v
+3         return i
+4 return NIL
+```
+2.1-4
+
+*分析*<br>
+考虑两个1位二进制数a和b，假设它们的和c是个2位二进制数，c[1]=ab，c[2]=(a+b)/2=(a+b)>>2。<br>
+再考虑两个2位二进制数和，它们的和是个3位二进制数；<br>
+当第一位相加时，先计算进位位c2=(a1+b1)>>1，再计算低位c1=a1^b1；<br>
+当第二位相加时，先计算进位位c3=(a2+b2+c2)>>1，再计算低位c2=a2^b2^c2<br>
+以此方法，若c1初始化为0，则各位计算的=(an+bn+cn)>>1，cn=an^bn^cn<br>
+
+*形式化描述*<br>
+循环不变式：在循环的每次迭代开始前，c[1...i]保存着a[1...i-1]和b[1...i-1]相加的和。<br>
+证明：<br>
+初始化：在循环的第一次迭代开始前，此时i=1，c[i]=0。人为给两个规定——1.a[1...0]和b[1...0]不包含任何元素；2.0位二进制数相加得0。在这两个约束下显然c[1]保存着a[1...0]和b[1...0]相加的和。不变式成立。<br>
+保持：若循环的某次迭代开始前不变式成立，假设此时i=k，根据不变式，c[1...k]保存着a[1..k-1和]b[1..k-1]相加的和；此次迭代执行，执行的结果就是c[1...k+1]保存着a[1..k]和b[1..k]相加的和；下一次迭代开始前，此时i=k+1，由上次迭代的执行结果知c[1...k+1]保存着a[1..k]和b[1..k]相加的和，即c[1...i]保存着a[1..i-1]和b[1..i-1]相加的和。不变式成立。<br>
+终止：循环的迭代终止时，i=n+1，将循环不变式中的i替换为n+1，即c[1...n+1]保存着a[1..n]和b[1..n]相加的和。而a[1..n]和b[1..n]就是完整的两个二进制数，所以不变式成立。<br>
+
+*伪代码*
+```
+ADD-BIN(A,B,C,n)
+1 C[1] = 0
+2 for i = 1 to n
+3    C[i+1] = (A[i] + B[i] + C[i]) >> 1
+4    C[i] = A[i]^B[i]^C[i]
+```
+
+*Java代码*
+```java
+public void addBin(binary[] A, binary[] B, binary[] C, int n){
+        C[0] = 0;
+        for(int i = 0; i < n; i++){
+                C[i+1] = (A[i] + B[i] + C[i]) >> 1;
+                C[i] = A[i]^B[i]^C[i];
+        }
+}
+```
+### 2.2 算法分析
+
+**练习**
+
+2.2-2<br>
+*伪代码*
+```
+SELECTION-SORT(A)
+1 for i = 1 to A.length - 1
+2     k = i
+3     for j = k + 1 to A.length
+4         if A[j] < A[k] 
+5            k = j
+6     tmp = A[i]
+7     A[i] = A[k]
+8     A[k] = tmp
+```
+
+*java代码*
+```java
+public void selectionSort(int[] A){
+    for(int i = 0; i < A.length - 1; i++){
+        int k = i;
+        for(int j = k + 1; j < A.length; j++){
+            if(A[j] < A[k]) k = j;
+        }
+        int tmp = A[i];
+        A[i] = A[k];
+        A[k] = tmp;
+    }
+}
+```
+
+*形式化描述*<br>
+循环不变式：A[1..i]包含A[1..n]最小数，且是已排序的。<br>
+当前n-1个排好序后，第n个既是最大数，故也是排好序的。<br>
+最佳运行时间：Θ(n^2)<br>
+最坏运行时间：Θ(n^2)<br>
+
+2.2-4<br>
+Modify the algorithm so it tests whether the input satisÞes some special-case con-dition and, if it does, output a pre-computed answer. The best-case running time is generally not a good measure of an algorithm.
+
+### 2.3 设计算法
+
+**分治模式**<br>
+1. 分解这些子问题,这些自问题是原问题的规模较小的实例.<br>
+2. 解决这些子问题,递归地求解这些子问题.<br>
+3. 合并这些子问题的解成原问题的解.<br>
+
+**归并排序**<br>
+
+*伪代码*
+```
+MERGE( A, p, q, r)
+1 n1 = q − p + 1 //计算A[p..q]的长度为n1
+2 n2 = r − q     //计算A[q+1..r]的长度n2
+3 create arrays L[1 . . n1 + 1] and R[1 . . n2 + 1] //创建L和R两个数组
+4 for i = 1 to n1  //将A[p..q]复制到L[1..n1]
+5     L[i] = A[ p + i − 1]
+6 for j = 1 to n2 //将A[q+1..r]复制到R[1..n2]
+7     R[j] = A[q + j]
+8 L[n1 + 1] = ∞   //底部设置哨兵
+9 R[n2 + 1] = ∞
+10 i = 1
+11 j = 1
+12 for k = p to r  //执行循环不变式完成两个子数组的合并
+13    if L[i] ≤ R[j]
+14       A[k] = L[i]
+15       i = i + 1
+16    else A[k] = R[j]
+17         j = j + 1
+```
+```
+MERGE-SORT(A,p,r)
+1 if p < r
+2    q = p+r/2
+3    MERGE-SORT(A,p,q)
+4    MERGE-SORT(A,q+1,r)
+5    MERGE(A,p,q,r)
+```
+
+*java代码*
+```java
+private static void merge(int[] A, int p, int q, int r){
+    int n1 = q - p + 1;
+    int n2 = r - q;
+    int[] L = new int[n1 + 1];
+    int[] R = new int[n2 + 1];
+    for(int i = 0; i < n1){
+        L[i] = A[p + i - 1];
+    }
+    for(int j = 0; j < n2; j++){
+        R[j] = A[q + j]
+    }
+    L[n1] = Integer.MAX_VALUE;
+    R[n2] = Integer.MAX_VALUE;
+    int i = 0;
+    int j = 0;
+    for(int k = p; k <= r; k++){
+        if(L[i] < R[j]) {
+            A[k] = L[i];
+            i++;
+        }else{
+            A[k] = R[j];
+            j++;
+        }
+    }
+}
+
+public static void mergeSort(int[] A, int p, int r){
+    if(p < r){
+        int q = (p + r)/2
+        mergeSort(A, p, q);
+        mergeSort(A, q + 1, r);
+        merge(A,p,q,r);
+    }
+}
+```
+
+
+
+
