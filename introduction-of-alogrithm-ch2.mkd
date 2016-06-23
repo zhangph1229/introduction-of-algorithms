@@ -213,6 +213,108 @@ public static void mergeSort(int[] A, int p, int r){
 }
 ```
 
+**分析分治算法**<br>
+对于递归问题通常使用递归式或者递归方程进行描述,归并问题的递归是表示为<br>
+![递归式](./pic/2016-06-23 21-35-54.png)<br>
+对于本问题提可以表示为<br>
+![递归式](./pic/2016-06-23 21-39-52.png)<br>
+为了证明`T(n)=O(nlgn)`再次重写递归式<br>
+![递归式](./pic/2016-06-23 21-46-09.png)<br>
+递归树为<br>
+![递归树](./pic/2016-06-23 21-46-44.png)<br>
+
+**练习**
+2.3-2<br>
+*伪代码*
+```
+MERGE( A, p, q, r)
+1 n1 = q − p + 1 //计算A[p..q]的长度为n1
+2 n2 = r − q     //计算A[q+1..r]的长度n2
+3 create arrays L[1 . . n1] and R[1 . . n2] //创建L和R两个数组
+4 for i = 1 to n1  //将A[p..q]复制到L[1..n1]
+5     L[i] = A[ p + i − 1]
+6 for j = 1 to n2 //将A[q+1..r]复制到R[1..n2]
+7     R[j] = A[q + j]
+8 i = 1
+9 j = 1
+10 for k = p to r  //执行循环不变式完成两个子数组的合并
+11    if i < n1 and j < n2
+12       if L[i] ≤ R[j]
+13          A[k] = L[i]
+14          i = i + 1
+15       else A[k] = R[j]
+16          j = j + 1
+17    else break;
+18 if i == n1 and j < n2
+19    for j = j to n2
+20        A[k++] = R[j]
+21 else if j == n2 and i < n1
+22    for i = i to n1
+23        A[k++] = L[i]
+```
+2.3-3<br>
+The base case is when n = 2, and we have n lg n = 2 lg 2 = 2 · 1 = 2.<br>
+For the inductive step, our inductive hypothesis is that T (n/2) = (n/2)lg(n/2).<br>
+Then<br>
+T(n) = 2T(n/2) + n <br>
+= 2(n/2) lg(n/2) + n <br>
+= n(lgn − 1) + n <br>
+= nlgn − n + n <br>
+= nlgn ,<br>
+which completes the inductive proof for exact powers of 2.<br>
+
+2.3-4<br>
+![插入排序的递归式](./pic/插入排序的递归式.png)
+
+2.3-5<br>
+*二分查找伪代码*<br>
+*迭代*
+```
+SEARCH-BIN(A, v, low, high)
+1 while low <= high
+2    mid = (low+high)/2
+3    if A[mid] == v 
+4        return mid
+5    else if v > A[mid]
+6             low = mid + 1
+7          else high = mid - 1
+8 return NIL     
+```
+*递归*
+```
+SEARCH-BIN(A, v, low, high)
+1 if low > high
+2     return NIL
+3 mid = (low+high)/2
+4 if(v == A[mid])
+5     return mid
+6 if(v > A[mid])
+7     return SEARCH-BIN(A, v, mid + 1, high)
+8 else return SEARCH-BIN(A, v, low, mid - 1)
+```
+Both procedures terminate the search unsuccessfully when the range is empty (i.e.,
+low > high) and terminate it successfully if the value v has been found. Based
+on the comparison of v to the middle element in the searched range, the search
+continues with the range halved. The recurrence for these procedures is therefore
+T(n) = T(n/2) + O(1), whose solution is T(n) = (lgn).
+
+2.3-6<br>
+The while loop of lines 5–7 of procedure I NSERTION -S ORT scans backward
+through the sorted array A[1 . . j − 1] to Þnd the appropriate place for A[j]. The
+hitch is that the loop not only searches for the proper place for A[ j ], but that it also moves each of the array elements that are bigger than A[ j ] one position to the right (line 6). These movements can take as much as ( j ) time, which occurs when all the j − 1 elements preceding A[ j ] are larger than A[ j ]. We can use binary search to improve the running time of the search to (lg j ), but binary search will have no effect on the running time of moving the elements. Therefore, binary search alone cannot improve the worst-case running time of I NSERTION -SORT to O(nlgn).
+
+****
+
+### 思考题
+2-1<br>
+
+
+
+
+
+
+
+
 
 
 
