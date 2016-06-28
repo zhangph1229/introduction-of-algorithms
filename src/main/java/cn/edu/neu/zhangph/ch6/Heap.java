@@ -35,7 +35,6 @@ public class Heap {
 			A[largest] = tmp;
 			maxHeapify(A, largest);
 		}
-		
 	}
 	public static void buildHeap(int[] A){
 		A[0] = A.length - 1;
